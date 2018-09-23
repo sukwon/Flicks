@@ -20,10 +20,14 @@ import java.util.List;
 
 public class MovieArrayAdapter extends ArrayAdapter<Movie> {
 
-    private static class ViewHolder {
+    private static class DetailViewHolder {
         ImageView ivImage;
         TextView tvTitle;
         TextView tvOverview;
+    }
+
+    private static class FullImageViewHolder {
+        ImageView ivImage;
     }
 
     public  MovieArrayAdapter(Context context, List<Movie> movies) {
@@ -34,36 +38,74 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         Movie movie = getItem(position);
-        ViewHolder viewHolder;
+        int type = getItemViewType(position);
 
-        if (convertView == null) {
-            viewHolder = new ViewHolder();
+        if (type == Movie.DisplayStyle.FULL_IMAGE.ordinal()) {
+            FullImageViewHolder viewHolder;
+            if (convertView == null) {
+                LayoutInflater inflater = LayoutInflater.from(getContext());
+                convertView = inflater.inflate(R.layout.item_movie_image, parent, false);
 
-            LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.item_movie, parent, false);
-            viewHolder.ivImage = convertView.findViewById(R.id.ivMovie);
-            viewHolder.tvTitle = convertView.findViewById(R.id.tvTitle);
-            viewHolder.tvOverview = convertView.findViewById(R.id.tvOverView);
+                viewHolder = new FullImageViewHolder();
+                viewHolder.ivImage = convertView.findViewById(R.id.ivMovie);
 
-            convertView.setTag(viewHolder);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (FullImageViewHolder) convertView.getTag();
+            }
+
+            viewHolder.ivImage.setImageResource(0);
+
+            String imagePath;
+            int orientation = parent.getResources().getConfiguration().orientation;
+            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                imagePath = movie.getPosterPath();
+            } else {
+                imagePath = movie.getBackdropPath();
+            }
+
+            Picasso.with(getContext()).load(imagePath).placeholder(R.mipmap.ic_launcher ).into(viewHolder.ivImage);
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            DetailViewHolder viewHolder;
+            if (convertView == null) {
+                LayoutInflater inflater = LayoutInflater.from(getContext());
+                convertView = inflater.inflate(R.layout.item_movie, parent, false);
+
+                viewHolder = new DetailViewHolder();
+                viewHolder.ivImage = convertView.findViewById(R.id.ivMovie);
+                viewHolder.tvOverview = convertView.findViewById(R.id.tvOverView);
+                viewHolder.tvTitle = convertView.findViewById(R.id.tvTitle);
+
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (DetailViewHolder) convertView.getTag();
+            }
+
+            viewHolder.ivImage.setImageResource(0);
+            viewHolder.tvTitle.setText(movie.getOriginalTitle());
+            viewHolder.tvOverview.setText(movie.getOverview());
+
+            String imagePath;
+            int orientation = parent.getResources().getConfiguration().orientation;
+            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                imagePath = movie.getPosterPath();
+            } else {
+                imagePath = movie.getBackdropPath();
+            }
+
+            Picasso.with(getContext()).load(imagePath).placeholder(R.mipmap.ic_launcher ).into(viewHolder.ivImage);
         }
-
-        viewHolder.ivImage.setImageResource(0);
-        viewHolder.tvTitle.setText(movie.getOriginalTitle());
-        viewHolder.tvOverview.setText(movie.getOverview());
-
-        String imagePath;
-        int orientation = parent.getResources().getConfiguration().orientation;
-        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            imagePath = movie.getPosterPath();
-        } else {
-            imagePath = movie.getBackdropPath();
-        }
-
-        Picasso.with(getContext()).load(imagePath).placeholder(R.mipmap.ic_launcher ).into(viewHolder.ivImage);
 
         return convertView;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItem(position).displayStyle.ordinal();
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return Movie.DisplayStyle.values().length;
     }
 }
