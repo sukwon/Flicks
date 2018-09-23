@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.codepath.flicks.CircleTransform;
 import com.codepath.flicks.R;
 import com.codepath.flicks.models.Movie;
 import com.squareup.picasso.Picasso;
@@ -64,7 +65,7 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
                 imagePath = movie.getBackdropPath();
             }
 
-            Picasso.with(getContext()).load(imagePath).placeholder(R.mipmap.ic_launcher ).into(viewHolder.ivImage);
+            Picasso.with(getContext()).load(imagePath).transform(new CircleTransform()).placeholder(R.mipmap.ic_launcher ).into(viewHolder.ivImage);
         } else {
             DetailViewHolder viewHolder;
             if (convertView == null) {
@@ -93,7 +94,7 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
                 imagePath = movie.getBackdropPath();
             }
 
-            Picasso.with(getContext()).load(imagePath).placeholder(R.mipmap.ic_launcher ).into(viewHolder.ivImage);
+            Picasso.with(getContext()).load(imagePath).transform(new CircleTransform()).placeholder(R.mipmap.ic_launcher ).into(viewHolder.ivImage);
         }
 
         return convertView;
