@@ -1,8 +1,11 @@
 package com.codepath.flicks;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.codepath.flicks.adapters.MovieArrayAdapter;
@@ -38,6 +41,7 @@ public class MovieActivity extends AppCompatActivity {
         lvItems.setAdapter(movieAdapter);
 
         fetchMovies();
+        setupListViewListener();
     }
 
     private void fetchMovies() {
@@ -74,5 +78,23 @@ public class MovieActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void setupListViewListener() {
+        lvItems.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        launchDetailView(position);
+                    }
+                }
+        );
+    }
+
+    public void launchDetailView(int index) {
+        Intent i = new Intent(MovieActivity.this, DetailActivity.class);
+        Movie movie = movies.get(index);
+        i.putExtra("movie", movie);
+        startActivity(i);
     }
 }
