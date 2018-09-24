@@ -66,11 +66,11 @@ public class MovieActivity extends AppCompatActivity {
                     JSONObject json = new JSONObject(responseData);
                     final JSONArray movieJSONResults = json.getJSONArray("results");
                     Log.d("DEBUG", movieJSONResults.toString());
+                    movies.addAll(Movie.fromJSONArray(movieJSONResults));
 
                     MovieActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            movies.addAll(Movie.fromJSONArray(movieJSONResults));
                             movieAdapter.notifyDataSetChanged();
                         }
                     });
