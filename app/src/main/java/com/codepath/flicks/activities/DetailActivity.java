@@ -33,6 +33,6 @@ public class DetailActivity extends AppCompatActivity {
         rBar.setRating(rating);
 
         ImageView ivMovie = findViewById(R.id.ivMovie);
-        Picasso.with(DetailActivity.this).load(movie.getBackdropPath()).placeholder(R.mipmap.ic_launcher).into(ivMovie);
+        Picasso.with(DetailActivity.this).load(movie.getBackdropPath()).placeholder(R.drawable.placeholder).into(ivMovie);
     }
 }
