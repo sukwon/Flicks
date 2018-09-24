@@ -1,4 +1,4 @@
-package com.codepath.flicks;
+package com.codepath.flicks.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.codepath.flicks.R;
 import com.codepath.flicks.adapters.MovieArrayAdapter;
 import com.codepath.flicks.models.Movie;
 
